@@ -1,0 +1,20 @@
+#cloud-config
+
+# This file just like usual cloud-init
+
+write_files:
+  - path: /usr/local/deploy-app/.env
+    permissions: '0600'
+    content: @.env
+  - path: /usr/local/deploy-app/startup.sh
+    permissions: '0700'
+    content:       @startup.sh
+  - path: /usr/local/deploy-app/dummy.txt
+    permissions: '0700'
+    content: |
+        Dummy file defined in old fashioned way
+
+runcmd:
+  - chown -R ubuntu:ubuntu /usr/local/deploy-app/
+  - chmod 0700 /usr/local/deploy-app/
+  - /usr/local/deploy-app/startup.sh
