@@ -5,14 +5,14 @@ OUTFILE=
 
 function main {
     echo "=== cloud-init preprocessor ==="
-    if ! parse_arg $@; then exit; fi
+    if ! parse_arg $@; then exit 1; fi
     echo "[I] INFILE : $INFILE"
     echo "[I] OUTFILE: $OUTFILE"
     if [ -f "$OUTFILE" ]; then
         echo
         read -p "This will overwrite $OUTFILE, are you sure? [Y/n]" -n 1 -r
         echo
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then exit; fi
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then exit 1; fi
         rm -f "$OUTFILE"
     fi
     preprocessor
@@ -51,6 +51,10 @@ function preprocessor {
         if [[ $line =~ ^(\ *)content:(\ *)@(.*)$ ]]; then
             local INDENT="${BASH_REMATCH[1]}"
             local IMPORT_FILE="${BASH_REMATCH[3]}"
+            if [ ! -f "${INDIR}/${IMPORT_FILE}" ]; then
+                echo "[!] Import file not found: ${IMPORT_FILE}"
+                exit 1
+            fi
             local BASE64=`base64 "${INDIR}/${IMPORT_FILE}"`
             echo "[ ] Import: ${IMPORT_FILE}"
             echo "${INDENT}encoding: b64" >> "$OUTFILE"
