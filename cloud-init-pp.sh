@@ -55,7 +55,7 @@ function preprocessor {
                 echo "[!] Import file not found: ${IMPORT_FILE}"
                 exit 1
             fi
-            local BASE64=`base64 "${INDIR}/${IMPORT_FILE}"`
+            local BASE64=`base64 --wrap=0 "${INDIR}/${IMPORT_FILE}"`
             echo "[ ] Import: ${IMPORT_FILE}"
             echo "${INDENT}encoding: b64" >> "$OUTFILE"
             echo "${INDENT}content: ${BASE64}" >> "$OUTFILE"
