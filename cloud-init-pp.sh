@@ -3,6 +3,19 @@
 INFILE=
 OUTFILE=
 
+case $(uname -a) in
+*Darwin\ Kernel* )
+    BASE64CMD="base64"
+    ;;
+*Linux* )
+    BASE64CMD="base64 --warp=0"
+    ;;
+* )
+    BASE64CMD="base64 --warp=0"
+    ;;
+esac
+
+
 function main {
     echo "=== cloud-init preprocessor ==="
     if ! parse_arg $@; then exit 1; fi
@@ -55,7 +68,7 @@ function preprocessor {
                 echo "[!] Import file not found: ${IMPORT_FILE}"
                 exit 1
             fi
-            local BASE64=`base64 --wrap=0 "${INDIR}/${IMPORT_FILE}"`
+            local BASE64=`${BASE64CMD} "${INDIR}/${IMPORT_FILE}"`
             echo "[ ] Import: ${IMPORT_FILE}"
             echo "${INDENT}encoding: b64" >> "$OUTFILE"
             echo "${INDENT}content: ${BASE64}" >> "$OUTFILE"
