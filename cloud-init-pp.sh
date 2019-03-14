@@ -8,10 +8,10 @@ case $(uname -a) in
     BASE64CMD="base64"
     ;;
 *Linux* )
-    BASE64CMD="base64 --warp=0"
+    BASE64CMD="base64 --wrap=0"
     ;;
 * )
-    BASE64CMD="base64 --warp=0"
+    BASE64CMD="base64 --wrap=0"
     ;;
 esac
 
